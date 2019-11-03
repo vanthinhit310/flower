@@ -153,8 +153,7 @@ return [
   'upload' => [
 
     // Disk in `config/filesystem.php`.
-    'disk' => 'public',
-
+    'disk' => 'admin',
     // Image and file upload path under the disk above.
     'directory' => [
       'image' => 'images',
@@ -396,7 +395,7 @@ return [
   */
   'extensions' => [
     'media-manager' => [
-      'disk' => 'public'   // Points to the disk set in config/filesystem.php
+      'disk' => 'admin'   // Points to the disk set in config/filesystem.php
     ],
     'admin-config' => [
       'title' => 'Admin Config',
@@ -424,6 +423,9 @@ return [
     ],
     'env-manager' => [
       'enable' => true
+    ],
+    'cropper' => [
+      'enable' => true,
     ]
   ],
 ];

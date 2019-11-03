@@ -1,8 +1,8 @@
 <div class="rev_slider_wrapper">
   <div id="slider1" class="rev_slider" data-version="5.0">
     <ul>
-      <?php for($i = 0; $i < 5; $i++): ?>
-        <li data-transition="fade"><img src="https://i.pinimg.com/originals/03/8a/46/038a4641f97b0bf2d5cbbf2bbabf4c13.jpg" alt=""/>
+      <?php $__currentLoopData = $sliders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $slide): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <li data-transition="random-premium"><img src="<?php echo e(asset('upload/'.$slide->image ?? ''), false); ?>" alt=""/>
           <div class="tp-caption large text-center"
                data-x="center"
                data-hoffset=""
@@ -16,7 +16,8 @@
                data-splitin="none"
                data-splitout="none"
                data-responsive_offset="on"
-               style="z-index: 9; white-space: nowrap; font-size: 50px; line-height: 50px;">Build your professional website
+               style="z-index: 9; white-space: nowrap; font-size: 50px; line-height: 50px;"><?php echo e($slide->title ?? '', false); ?>
+
           </div>
           <div class="tp-caption medium text-center"
                data-x="center"
@@ -32,7 +33,8 @@
                data-splitin="none"
                data-splitout="none"
                data-responsive_offset="on"
-               style="z-index: 9; white-space: nowrap; font-size: 25px; line-height: 25px;">Create a unique website easily with the help of tons of features
+               style="z-index: 9; white-space: nowrap; font-size: 25px; line-height: 25px;"><?php echo e($slide->description ?? '', false); ?>
+
           </div>
           <div class="tp-caption medium text-center"
                data-x="center"
@@ -50,7 +52,7 @@
                data-responsive_offset="on"
                style="z-index: 7; white-space: nowrap; font-size: 30px; line-height: 30px;"><a href="#" class="btn btn-white btn-large">See Features</a></div>
         </li>
-      <?php endfor; ?>
+      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </ul>
     <div class="tp-bannertimer tp-bottom"></div>
   </div>

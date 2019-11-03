@@ -100,6 +100,15 @@
       <path value="$PROJECT_DIR$/vendor/jxlwqq/env-manager" />
       <path value="$PROJECT_DIR$/vendor/laravel-admin-ext/helpers" />
       <path value="$PROJECT_DIR$/vendor/laravel-admin-ext/scheduling" />
+      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/intervention/image" />
+      <path value="$PROJECT_DIR$/vendor/laravel-admin-ext/cropper" />
+      <path value="$PROJECT_DIR$/vendor/laravel-admin-ext/backup" />
+      <path value="$PROJECT_DIR$/vendor/spatie/laravel-backup" />
+      <path value="$PROJECT_DIR$/vendor/spatie/temporary-directory" />
+      <path value="$PROJECT_DIR$/vendor/spatie/db-dumper" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.1" />
