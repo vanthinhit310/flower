@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Slider;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-  //
-  public function index()
-  {
-    $data = [];
-    $data['sliders'] = Slider::all();
-    return view('page.index', $data);
-  }
-
+    public function index()
+    {
+        return view('welcome');
+    }
 }

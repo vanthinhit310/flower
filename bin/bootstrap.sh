@@ -44,6 +44,8 @@ if [[ "$platform" != 'window' ]]; then
 	GZIP="$($BIN/which gzip)"
 	FIND="$($BIN/which find)"
 	TOUCH="$($BIN/which touch)"
+	LS="$($BIN/which ls)" 
+	PHP="$($BIN/which php)" 
 else	
 	CP="cp"
 	SSH="ssh"
@@ -63,7 +65,9 @@ else
 	GZIP="gzip"
 	TOUCH="touch"
 	#end no support
-	FIND="find"	
+	FIND="find"
+	LS="ls"	
+	PHP="php" 
 fi
 
 ### directory and file modes for cron and mirror files
@@ -161,57 +165,41 @@ fi
 
 ### settings / options
 PHPCOPTS="-d memory_limit=-1"
+ 
+$RM -rf $SCRIPT_PATH/../storage/framework/cache
+$RM -rf $SCRIPT_PATH/../storage/framework/sessions
+$RM -rf $SCRIPT_PATH/../storage/framework/testing
+$RM -rf $SCRIPT_PATH/../storage/framework/views
+$RM -rf $SCRIPT_PATH/../bootstrap/cache/*.php
+$RM -rf $SCRIPT_PATH/../composer.lock
 
-if [[ "$platform" != 'window' ]]; then
-	$RM -rf $SCRIPT_PATH/../storage/framework/cache
-	$RM -rf $SCRIPT_PATH/../storage/framework/sessions
-	$RM -rf $SCRIPT_PATH/../storage/framework/testing
-	$RM -rf $SCRIPT_PATH/../storage/framework/views
-	# $RM -Rf $SCRIPT_PATH/../storage/DoctrineModule
-	# $RM -Rf $SCRIPT_PATH/../storage/DoctrineORMModule
-	# $RM -Rf $SCRIPT_PATH/../storage/DoctrineMongoODMModule
-else 
-	$RM -rf $SCRIPT_PATH/../storage/framework/cache
-	$RM -rf $SCRIPT_PATH/../storage/framework/sessions
-	$RM -rf $SCRIPT_PATH/../storage/framework/testing
-	$RM -rf $SCRIPT_PATH/../storage/framework/views
-	# $RM -rf $SCRIPT_PATH/../storage/DoctrineModule
-	# $RM -rf $SCRIPT_PATH/../storage/DoctrineORMModule
-	# $RM -rf $SCRIPT_PATH/../storage/DoctrineMongoODMModule
-fi
+[ ! -d "$SCRIPT_PATH/../storage/framework/cache" ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/framework/cache
+[ ! -f "$SCRIPT_PATH/../storage/framework/cache/.gitignore" ] && touch $SCRIPT_PATH/../storage/framework/cache/.gitignore && echo -e "*\n!.gitignore"$'\r' > $SCRIPT_PATH/../storage/framework/cache/.gitignore
+ 
+[ ! -d "$SCRIPT_PATH/../storage/framework/sessions" ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/framework/sessions
+[ ! -f "$SCRIPT_PATH/../storage/framework/sessions/.gitignore" ] && touch $SCRIPT_PATH/../storage/framework/sessions/.gitignore && echo -e "*\n!.gitignore"$'\r' > $SCRIPT_PATH/../storage/framework/sessions/.gitignore
+ 
+[ ! -d "$SCRIPT_PATH/../storage/framework/testing" ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/framework/testing
+[ ! -f "$SCRIPT_PATH/../storage/framework/testing/.gitignore" ] && touch $SCRIPT_PATH/../storage/framework/testing/.gitignore && echo -e "*\n!.gitignore"$'\r' > $SCRIPT_PATH/../storage/framework/testing/.gitignore
 
-# do not delete upload files
-## [ ! -d "$SCRIPT_PATH/../public/uploads/media"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../public/uploads/media && touch $SCRIPT_PATH/../public/uploads/media/index.html
+[ ! -d "$SCRIPT_PATH/../storage/framework/views" ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/framework/views
+[ ! -f "$SCRIPT_PATH/../storage/framework/views/.gitignore" ] && touch $SCRIPT_PATH/../storage/framework/views/.gitignore && echo -e "*\n!.gitignore"$'\r' > $SCRIPT_PATH/../storage/framework/views/.gitignore
 
-if [[ "$platform" != 'window' ]]; then
-	[ ! -d "$SCRIPT_PATH/../storage/framework/cache"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/framework/cache && touch $SCRIPT_PATH/../storage/framework/cache/index.html
-	[ ! -d "$SCRIPT_PATH/../storage/framework/sessions"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/framework/sessions && touch $SCRIPT_PATH/../storage/framework/sessions/index.html
-	[ ! -d "$SCRIPT_PATH/../storage/framework/testing"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/framework/testing && touch $SCRIPT_PATH/../storage/framework/testing/index.html
-	[ ! -d "$SCRIPT_PATH/../storage/framework/views"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/framework/views && touch $SCRIPT_PATH/../storage/framework/views/index.html
-	[ ! -d "$SCRIPT_PATH/../storage/logs"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/logs && touch $SCRIPT_PATH/../storage/logs/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineModule"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineModule && touch $SCRIPT_PATH/../storage/DoctrineModule/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineORMModule"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineORMModule && touch $SCRIPT_PATH/../storage/DoctrineORMModule/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineORMModule/Hydrator"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineORMModule/Hydrator && touch $SCRIPT_PATH/../storage/DoctrineORMModule/Hydrator/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineORMModule/Proxy"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineORMModule/Proxy && touch $SCRIPT_PATH/../storage/DoctrineORMModule/Proxy/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineMongoODMModule"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineMongoODMModule && touch $SCRIPT_PATH/../storage/DoctrineMongoODMModule/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineMongoODMModule/Hydrator"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Hydrator && touch $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Hydrator/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineMongoODMModule/Proxy"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Proxy && touch $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Proxy/index.html
+[ ! -d "$SCRIPT_PATH/../storage/logs" ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/logs
+[ ! -f "$SCRIPT_PATH/../storage/logs/.gitignore" ] && touch $SCRIPT_PATH/../storage/logs/.gitignore && echo -e "*\n!.gitignore"$'\r' > $SCRIPT_PATH/../storage/logs/.gitignore
 
-	($CD $SCRIPT_PATH && $FIND $SCRIPT_PATH -type d -exec touch {}/index.html \; )
-else
-	[ ! -d "$SCRIPT_PATH/../storage/framework/cache"  ] && $MKDIR -p $SCRIPT_PATH/../storage/framework/cache && touch $SCRIPT_PATH/../storage/framework/cache/index.html
-	[ ! -d "$SCRIPT_PATH/../storage/framework/sessions"  ] && $MKDIR -p $SCRIPT_PATH/../storage/framework/sessions && touch $SCRIPT_PATH/../storage/framework/sessions/index.html
-	[ ! -d "$SCRIPT_PATH/../storage/framework/testing"  ] && $MKDIR -p $SCRIPT_PATH/../storage/framework/testing && touch $SCRIPT_PATH/../storage/framework/testing/index.html
-	[ ! -d "$SCRIPT_PATH/../storage/framework/views"  ] && $MKDIR -p $SCRIPT_PATH/../storage/framework/views && touch $SCRIPT_PATH/../storage/framework/views/index.html
-	[ ! -d "$SCRIPT_PATH/../storage/logs"  ] && $MKDIR -p $SCRIPT_PATH/../storage/logs && touch $SCRIPT_PATH/../storage/logs/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineModule"  ] && $MKDIR -p $SCRIPT_PATH/../storage/DoctrineModule && touch $SCRIPT_PATH/../storage/DoctrineModule/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineORMModule"  ] && $MKDIR  -p $SCRIPT_PATH/../storage/DoctrineORMModule && touch $SCRIPT_PATH/../storage/DoctrineORMModule/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineORMModule/Hydrator"  ] && $MKDIR  -p $SCRIPT_PATH/../storage/DoctrineORMModule/Hydrator && touch $SCRIPT_PATH/../storage/DoctrineORMModule/Hydrator/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineORMModule/Proxy"  ] && $MKDIR  -p $SCRIPT_PATH/../storage/DoctrineORMModule/Proxy && touch $SCRIPT_PATH/../storage/DoctrineORMModule/Proxy/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineMongoODMModule"  ] && $MKDIR  -p $SCRIPT_PATH/../storage/DoctrineMongoODMModule && touch $SCRIPT_PATH/../storage/DoctrineMongoODMModule/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineMongoODMModule/Hydrator"  ] && $MKDIR  -p $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Hydrator && touch $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Hydrator/index.html
-	# [ ! -d "$SCRIPT_PATH/../storage/DoctrineMongoODMModule/Proxy"  ] && $MKDIR  -p $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Proxy && touch $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Proxy/index.html
-fi
+[ ! -d "$SCRIPT_PATH/../bootstrap/cache" ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../bootstrap/cache
+[ ! -f "$SCRIPT_PATH/../bootstrap/cache/.gitignore" ] && touch $SCRIPT_PATH/../bootstrap/cache/.gitignore && echo -e "*\n!.gitignore"$'\r' > $SCRIPT_PATH/../bootstrap/cache/.gitignore
+
+# [ ! -d "$SCRIPT_PATH/../storage/DoctrineModule"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineModule && touch $SCRIPT_PATH/../storage/DoctrineModule/.gitignore && echo -e "*\n!.gitignore"$'\r' > $SCRIPT_PATH/../storage/DoctrineModule/.gitignore
+# [ ! -d "$SCRIPT_PATH/../storage/DoctrineORMModule"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineORMModule && touch $SCRIPT_PATH/../storage/DoctrineORMModule/.gitignore && echo -e "*\n!.gitignore"$'\r' > $SCRIPT_PATH/../storage/DoctrineORMModule/.gitignore
+# [ ! -d "$SCRIPT_PATH/../storage/DoctrineORMModule/Hydrator"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineORMModule/Hydrator && touch $SCRIPT_PATH/../storage/DoctrineORMModule/Hydrator/.gitignore && echo -e "*\n!.gitignore"$'\r' > $SCRIPT_PATH/../storage/DoctrineORMModule/Hydrator/.gitignore
+# [ ! -d "$SCRIPT_PATH/../storage/DoctrineORMModule/Proxy"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineORMModule/Proxy && touch $SCRIPT_PATH/../storage/DoctrineORMModule/Proxy/.gitignore && echo -e "*\n!.gitignore"$'\r' > $SCRIPT_PATH/../storage/DoctrineORMModule/Proxy/.gitignore
+# [ ! -d "$SCRIPT_PATH/../storage/DoctrineMongoODMModule"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineMongoODMModule && touch $SCRIPT_PATH/../storage/DoctrineMongoODMModule/.gitignore && echo -e "*\n!.gitignore"$'\r' > $SCRIPT_PATH/../storage/DoctrineMongoODMModule/.gitignore
+# [ ! -d "$SCRIPT_PATH/../storage/DoctrineMongoODMModule/Hydrator"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Hydrator && touch $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Hydrator/.gitignore && echo -e "*\n!.gitignore"$'\r' > $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Hydrator/.gitignore
+# [ ! -d "$SCRIPT_PATH/../storage/DoctrineMongoODMModule/Proxy"  ] && $MKDIR -m $FDMODE -p $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Proxy && touch $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Proxy/.gitignore && echo -e "*\n!.gitignore"$'\r' > $SCRIPT_PATH/../storage/DoctrineMongoODMModule/Proxy/.gitignore
+
+($CD $SCRIPT_PATH && $FIND $SCRIPT_PATH -type d -exec touch {}/index.html \; )
 
 # get last composer
 if [ -f composer.phar ]
@@ -238,18 +226,22 @@ if [ -f composer.lock ]
         php $PHPCOPTS composer.phar install -o -a;
 fi
 
-# install or update front-end library
-if [ -f composer.front.json ]
-    then
-        if [ -f composer.front.lock ]
-            then
-                COMPOSER=composer.front.json php $PHPCOPTS composer.phar config --global discard-changes true
-                COMPOSER=composer.front.json php $PHPCOPTS composer.phar update -o -a;
-            else
-                COMPOSER=composer.front.json php $PHPCOPTS composer.phar config --global discard-changes true
-                COMPOSER=composer.front.json php $PHPCOPTS composer.phar install -o -a;
-        fi
+# for laravel
+if [ -f artisan ]
+	then
+		($CD $SCRIPT_PATH/../ && $PHP artisan vendor:publish --tag=public --force)
+		($CD $SCRIPT_PATH/../ && $PHP artisan config:clear && $PHP artisan cache:clear && composer dumpautoload)
 fi
 
-$CHMOD -R 0777 $SCRIPT_PATH/../storage/
+## SWAGGER NGINX ONLY
+# $RM -f $SCRIPT_PATH/../public/docs
+# $RM -f $SCRIPT_PATH/../public/swagger-ui
+
+# ln -s $SCRIPT_PATH/../storage/api-docs  $SCRIPT_PATH/../public/docs
+# ln -s $SCRIPT_PATH/../vendor/swagger-api/swagger-ui/dist  $SCRIPT_PATH/../public/swagger-ui
+
+# Ignore Symbolic links
+# ($CD $SCRIPT_PATH && $FIND $SCRIPT_PATH/../ -type l | sed -e s'/^\.\///g' >> $SCRIPT_PATH/../.gitignore)
+
+($CD $SCRIPT_PATH && $CHMOD -R 0777 $SCRIPT_PATH/../storage/ && $CHMOD 0777 $SCRIPT_PATH/../bootstrap/cache/)
 echo -e "$BLUE All paths created $NORMAL"
